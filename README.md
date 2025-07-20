@@ -55,5 +55,49 @@ Students often attend college/university events, but meaningful engagement is mi
 ---
 
 ## 📁 Project Structure
+engage-ai/
+├── backend/ # Express API
+│ ├── models/ # Mongoose models
+│ ├── routes/ # Attendance, Poll, User APIs
+│ └── index.js # Server entry point
+├── frontend/ # React App
+│ └── src/ # Components, App.js
 
+---
+
+## ▶️ How to Run
+
+### 🔌 Backend
+```bash
+cd backend
+npm install
+# Update .env with your MongoDB URI
+node index.js
+cd frontend
+npm install
+npm start
+cd frontend
+npm install
+npm start
+
+📊 Engagement Scoring Model
+Action	Points
+Attending a session	+10
+Answering a poll/Q&A	+5
+Downloading a resource	+3
+Multiple interactions	✅ Supported and accumulative
+📈 Future Improvements
+
+    Admin dashboard to view all users
+
+    Firebase login with roles (Student / Organizer)
+
+    QR-code-based check-in for sessions
+
+    Analytics charts (Recharts, Chart.js)
+
+🙋‍♂️ Author
+
+Solo Submission
+Built with ❤️ during a hackathon by Khathija Shaik Chintakrindi
 
