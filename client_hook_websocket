@@ -1,0 +1,63 @@
+import { useEffect, useRef } from "react";
+import { queryClient } from "@/lib/queryClient";
+
+export function useWebSocket(eventId?: number) {
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    if (!eventId) return;
+
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    
+    const ws = new WebSocket(wsUrl);
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+      ws.send(JSON.stringify({
+        type: "join_event",
+        eventId,
+      }));
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        
+        switch (data.type) {
+          case "poll_created":
+          case "poll_response":
+            queryClient.invalidateQueries({ queryKey: ["/api/sessions"] });
+            queryClient.invalidateQueries({ queryKey: ["/api/polls"] });
+            break;
+          case "question_submitted":
+            queryClient.invalidateQueries({ queryKey: ["/api/sessions"] });
+            break;
+          case "checkin":
+            queryClient.invalidateQueries({ queryKey: ["/api/events"] });
+            break;
+          case "participant_joined":
+            queryClient.invalidateQueries({ queryKey: ["/api/events"] });
+            break;
+          default:
+            console.log("Unknown WebSocket message type:", data.type);
+        }
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+
+    return () => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
+  }, [eventId]);
+
+  return wsRef.current;
+}
