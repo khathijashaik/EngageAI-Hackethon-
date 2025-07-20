@@ -49,8 +49,8 @@ Students often attend college/university events, but meaningful engagement is mi
 |-------------|-------------------|
 | Frontend    | React, Tailwind CSS |
 | Backend     | Node.js, Express  |
-| Database    | MongoDB (Atlas or local) |
-| Auth (optional) | Firebase (can be added) |
+| Database    | MongoDB |
+ 
 
 ---
 
